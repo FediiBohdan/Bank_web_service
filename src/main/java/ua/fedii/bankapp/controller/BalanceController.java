@@ -1,12 +1,14 @@
-package ua.fedii.bankapp;
+package ua.fedii.bankapp.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ua.fedii.bankapp.service.BankService;
 import ua.fedii.bankapp.model.TransferBalance;
 
 import java.math.BigDecimal;
 
+@Slf4j
 @RestController("/balance")
 @AllArgsConstructor //@Autowired -> bankService
 public class BalanceController {
@@ -28,5 +30,11 @@ public class BalanceController {
     public void transfer(
             @RequestBody TransferBalance transferBalance) {
         bankService.makeTransfer(transferBalance);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handle(IllegalArgumentException e) {
+        log.error(e.getMessage());
+        return "Broken...";
     }
 }
